@@ -17,5 +17,7 @@ public class StringUtil {
         
         sourceUrl=StringUtils.substringBefore(sourceUrl.replaceAll("((.*)(://)(.*)@([^/]*)/)|((.*)(://)([^/]*)/)|(^/)", ""), "?");
         System.out.println(sourceUrl);
+        
+        System.out.println("完成---------");
     }
 }
