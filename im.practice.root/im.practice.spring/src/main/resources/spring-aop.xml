@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+        
+	<bean id="dbDaoImpl" class="im.practice.aop.springaop.dao.DbDaoImpl" />
+    <bean id="userService" class="im.practice.aop.springaop.service.UserService">
+        <property name="dbDao" ref="dbDaoImpl"/>
+    </bean>
+
+    <bean id="einstein" class="im.practice.aop.springaop.introduction.Einstein"/>
+
+    <bean id="transactions" class="im.practice.aop.springaop.aspect.Transactions" />
+    <bean id="log" class="im.practice.aop.springaop.aspect.LogUtils"/>
+    <aop:config>
+        <aop:aspect id="transAspect" ref="transactions" order="1">
+            <aop:pointcut id="transPointcut" expression="execution(* im.practice.aop.springaop.dao.*Impl.*(..))"/>
+            <aop:before method="startTransactions" pointcut-ref="transPointcut"/>
+            <aop:after-returning method="commit" pointcut-ref="transPointcut"/>
+            <aop:after-throwing method="rollBack" pointcut-ref="transPointcut"/>
+        </aop:aspect>
+        <aop:aspect id="logAspect" ref="log" order="2">
+            <aop:pointcut id="logPointcut" expression="execution(* im.practice.aop.springaop.service.*Service.*(..))"/>
+            <aop:after method="createLog" pointcut-ref="logPointcut"/>
+        </aop:aspect>
+        <aop:aspect>
+            <aop:declare-parents types-matching="im.practice.aop.springaop.introduction.Einstein"
+                                 implement-interface="im.practice.aop.springaop.introduction.Mathematician"
+                                 default-impl="im.practice.aop.springaop.introduction.MathematicianImpl"/>
+
+        </aop:aspect>
+
+    </aop:config>
+	
+ </beans>
