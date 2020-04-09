@@ -18,7 +18,7 @@ import java.util.Set;
  * creat_user: yangyang
  * creat_date: $ $
  **/
-public class NioReServer implements Runnable{
+public class NioReServer  {
 
     private Selector selector;
     private Selector selectorRead;
@@ -48,6 +48,7 @@ public class NioReServer implements Runnable{
                         SocketChannel socketChannel =serverSocketChannel.accept();
                         socketChannel.configureBlocking(false);
                         socketChannel.register(selectorRead,selectionKey.OP_READ);
+                        new Thread(new Process()).start();
                     }
                     iterator.remove();
                 }
@@ -56,35 +57,39 @@ public class NioReServer implements Runnable{
         }
     }
 
-    @Override
-    public void run() {
-        try {
-            while (true){
-                System.out.println("扫描selectRead");
-                int count =selectorRead.select();
-                if (count>0){
-                    Iterator<SelectionKey> iterator=selectorRead.selectedKeys().iterator();
-                    while(iterator.hasNext()){
-                        SelectionKey selectionKey=iterator.next();
-                        if (selectionKey.isReadable()){
-                            SocketChannel socketChannel=(SocketChannel) selectionKey.channel();
-                            ByteBuffer readBuffer=ByteBuffer.allocate(1024);
-                            int size=socketChannel.read(readBuffer);
-                            System.out.println(new String(readBuffer.array(),0,size));
-                            readBuffer.clear();
+    class Process implements Runnable{
+        @Override
+        public void run() {
+            try {
+                while (true){
+                    System.out.println("扫描selectRead");
+                    int count =selectorRead.select();
+                    if (count>0){
+                        Iterator<SelectionKey> iterator=selectorRead.selectedKeys().iterator();
+                        while(iterator.hasNext()){
+                            SelectionKey selectionKey=iterator.next();
+                            if (selectionKey.isReadable()){
+                                SocketChannel socketChannel=(SocketChannel) selectionKey.channel();
+                                ByteBuffer readBuffer=ByteBuffer.allocate(1024);
+                                int size=socketChannel.read(readBuffer);
+                                System.out.println(new String(readBuffer.array(),0,size));
+                                readBuffer.clear();
 
-                            ByteBuffer wirteBuffer=ByteBuffer.allocate(1024);
-                            wirteBuffer.put("111111".getBytes());
-                            wirteBuffer.flip();
-                            socketChannel.write(wirteBuffer);
+                                ByteBuffer wirteBuffer=ByteBuffer.allocate(1024);
+                                wirteBuffer.put("111111".getBytes());
+                                wirteBuffer.flip();
+                                socketChannel.write(wirteBuffer);
 
+                            }
+                            iterator.remove();
                         }
-                        iterator.remove();
                     }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
+
+
 }

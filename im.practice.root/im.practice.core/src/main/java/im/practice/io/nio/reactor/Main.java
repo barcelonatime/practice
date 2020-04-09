@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             NioReServer nioReServer=new NioReServer();
-            new Thread(nioReServer).start();
+            //new Thread(nioReServer).start();
             nioReServer.listener();
         }catch (Exception e){
             e.printStackTrace();

@@ -20,6 +20,8 @@
         <module>im.practice.core</module>
         <module>im.practice.spring</module>
         <module>im.practice.es</module>
+        <module>im.practice.zk</module>
+        <module>im.practice.springmvc</module>
     </modules>
 
 

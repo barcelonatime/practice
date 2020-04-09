@@ -1,6 +1,6 @@
 package im.practice.ftp;
 
-import org.apache.commons.io.IOUtils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -44,13 +44,13 @@ public class FtpNew {
                 ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
 
                 if (ftpClient.changeWorkingDirectory(arr[4])) {
-                    Boolean f=ftpClient.storeFile(new String(filename.getBytes(), "iso8859-1"), IOUtils.toInputStream(requestXml, "utf-8"));
-                    System.out.println(f);
+                    //Boolean f=ftpClient.storeFile(new String(filename.getBytes(), "iso8859-1"), IOUtils.toInputStream(requestXml, "utf-8"));
+                    //System.out.println(f);
                 } else {
 
                     boolean isSucc = ftpClient.makeDirectory(arr[4]);
                     if (ftpClient.changeWorkingDirectory(arr[4])){
-                        ftpClient.storeFile(new String(filename.getBytes(), "iso8859-1"), IOUtils.toInputStream(requestXml, "utf-8"));
+                        //ftpClient.storeFile(new String(filename.getBytes(), "iso8859-1"), IOUtils.toInputStream(requestXml, "utf-8"));
                     }else{
 
                     }
